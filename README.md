@@ -13,7 +13,7 @@ An example of using the multiplexer:
 	)
 
 	// Handlers
-	func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) { //, ro *bxog.Router
+	func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 		io.WriteString(w, "Welcome to Bxog!")
 	}
 	func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
