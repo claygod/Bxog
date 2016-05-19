@@ -30,7 +30,7 @@ An example of using the multiplexer:
 		io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
 		// Creating a URL string
 		io.WriteString(w, "Creating a URL from route:\n")
-		io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "city": "1867", "money": "rouble"}))
+		io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
 	}
 
 	// Main
