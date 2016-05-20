@@ -27,9 +27,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 // Default Handler
 func (r *Router) Default(w http.ResponseWriter, req *http.Request) {
-	w.Write([]byte("b"))
 	w.WriteHeader(404)
-	//http.NotFoundHandler()
-	//http.Error(w, "Page not found", 404)
+	http.Error(w, "Page not found", 404)
 	return
 }
