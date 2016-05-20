@@ -1,15 +1,15 @@
+// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+
 package bxog
 
 // Route
-// The route for URL
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
-	//"fmt"
 	"net/http"
 	"strings"
 )
 
+// The route for URL
 type Route struct {
 	id       string // added by the user
 	method   string
@@ -24,9 +24,6 @@ func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Re
 		handler,
 		[]*Section{},
 	}
-	//route.id = url
-	//route.handler = handler
-	//route.method = method
 	route.setSections(url)
 	r.routes = append(r.routes, route)
 	return route
