@@ -62,8 +62,6 @@ func (r *Router) Params(req *http.Request, id string) map[string]string {
 				out[c_route.sections[u].id] = query[u]
 			}
 		}
-	} else {
-		out["FUCK"] = "YOU"
 	}
 	return out
 }
