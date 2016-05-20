@@ -1,14 +1,14 @@
+// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+
 package bxog
 
 // Index
-// Router using the index selects the route
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
-	//"fmt"
 	"net/http"
 )
 
+// Router using the index selects the route
 type Index struct {
 	tree  map[type_hash]*Node
 	index map[type_hash]*Route
@@ -27,10 +27,6 @@ func (x *Index) find(url string, req *http.Request, r *Router) *Route {
 	level := x.genUintSlice(url[1:], salt, &c_hashes)
 	var c_node *Node
 
-	//fmt.Println("== URL => ", url, " LEVEL => ", level)
-	//fmt.Println("== HASH => ", c_hashes)
-	//fmt.Println("== TREE => ", x.tree)
-
 	if x.tree[c_hashes[0]] != nil {
 		c_node = x.tree[c_hashes[0]]
 	} else if x.tree[x.genUint(DELIMITER_STRING, salt)] != nil {
@@ -38,7 +34,7 @@ func (x *Index) find(url string, req *http.Request, r *Router) *Route {
 	} else {
 		return nil
 	}
-	// slash "/"
+	// slash
 	if level == 0 {
 		if c_node.route != nil {
 			return c_node.route
@@ -147,7 +143,6 @@ func (x *Index) genUint(s string, total type_hash) type_hash {
 	length := len(s)
 	for i := 0; i < length; i++ {
 		total = total<<5 + type_hash(s[i])
-		//total = 31*total + type_hash(s[i])
 	}
 	return total
 }
