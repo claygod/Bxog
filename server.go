@@ -1,14 +1,15 @@
+// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+
 package bxog
 
 // Server
-// ServeHTTP looks for a matching route
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	//"fmt"
 	"net/http"
 )
 
+// ServeHTTP looks for a matching route
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	//r.index.find(req.URL.Path, req, r)
 	//r.Default(w, req)
