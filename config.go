@@ -1,11 +1,13 @@
+// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+
 package bxog
 
 // Gonfig
 // Multiplexer configuration
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 type type_hash uint32
 
+// Types sections URL
 const (
 	TYPE_STAT = iota
 	TYPE_ARG
