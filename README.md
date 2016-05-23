@@ -54,7 +54,7 @@ Click URLs:
 
 # Settings
 
-Necessary changes in the configuration of the multiplexer can be made in the configuration file [config.go](https://github.com/claygod/bxog/config.go)
+Necessary changes in the configuration of the multiplexer can be made in the configuration file [config.go](https://github.com/claygod/Bxog/blob/master/config.go)
 
 # Perfomance
 
