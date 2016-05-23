@@ -2,7 +2,7 @@
 
 package bxog
 
-// Route
+// route
 
 import (
 	"net/http"
@@ -10,26 +10,26 @@ import (
 )
 
 // The route for URL
-type Route struct {
+type route struct {
 	id       string // added by the user
 	method   string
 	handler  func(http.ResponseWriter, *http.Request, *Router)
-	sections []*Section
+	sections []*section
 }
 
-func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Router), method string) *Route {
-	route := &Route{
+func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Router), method string) *route {
+	route := &route{
 		url,
 		method,
 		handler,
-		[]*Section{},
+		[]*section{},
 	}
 	route.setSections(url)
 	r.routes = append(r.routes, route)
 	return route
 }
 
-func (r *Route) setSections(url string) *Route {
+func (r *route) setSections(url string) *route {
 	sec := r.parseUrl(url[1:])
 	if len(sec) < HTTP_SECTION_COUNT {
 		r.sections = sec
@@ -40,20 +40,20 @@ func (r *Route) setSections(url string) *Route {
 	}
 }
 
-func (r *Route) Method(value string) *Route {
+func (r *route) Method(value string) *route {
 	r.method = value
 	return r
 }
 
-func (r *Route) Id(value string) *Route {
+func (r *route) Id(value string) *route {
 	r.id = value
 	return r
 }
 
-func (r *Route) parseUrl(url string) []*Section {
-	var array_sec []*Section
+func (r *route) parseUrl(url string) []*section {
+	var array_sec []*section
 	if len(url) == 0 {
-		return []*Section{}
+		return []*section{}
 	}
 	result := r.genSplit(url)
 
@@ -67,7 +67,7 @@ func (r *Route) parseUrl(url string) []*Section {
 	return array_sec
 }
 
-func (r *Route) genSplit(s string) []string {
+func (r *route) genSplit(s string) []string {
 	n := 1
 	c := DELIMITER_BYTE
 	for i := 0; i < len(s); i++ {
