@@ -5,13 +5,13 @@ package bxog
 // Node
 
 // Nodes are stored in the index. Used for route search.
-type Node struct {
-	child map[type_hash]*Node
-	route *Route
+type node struct {
+	child map[type_hash]*node
+	route *route
 }
 
-func newNode() *Node {
-	new_node := &Node{}
-	new_node.child = make(map[type_hash]*Node)
+func newNode() *node {
+	new_node := &node{}
+	new_node.child = make(map[type_hash]*node)
 	return new_node
 }
