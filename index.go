@@ -9,23 +9,23 @@ import (
 )
 
 // Router using the index selects the route
-type Index struct {
-	tree  map[type_hash]*Node
-	index map[type_hash]*Route
+type index struct {
+	tree  map[type_hash]*node
+	index map[type_hash]*route
 }
 
-func newIndex() *Index {
-	return &Index{
-		tree:  make(map[type_hash]*Node),
-		index: make(map[type_hash]*Route),
+func newIndex() *index {
+	return &index{
+		tree:  make(map[type_hash]*node),
+		index: make(map[type_hash]*route),
 	}
 }
 
-func (x *Index) find(url string, req *http.Request, r *Router) *Route {
+func (x *index) find(url string, req *http.Request, r *Router) *route {
 	salt := x.genSalt(req.Method)
 	c_hashes := [HTTP_SECTION_COUNT]type_hash{}
 	level := x.genUintSlice(url[1:], salt, &c_hashes)
-	var c_node *Node
+	var c_node *node
 
 	if x.tree[c_hashes[0]] != nil {
 		c_node = x.tree[c_hashes[0]]
@@ -61,7 +61,7 @@ func (x *Index) find(url string, req *http.Request, r *Router) *Route {
 	return nil
 }
 
-func (x *Index) compile(routes []*Route) {
+func (x *index) compile(routes []*route) {
 	for _, route := range routes {
 		salt := x.genSalt(route.method)
 		x.index[x.genUint(route.id, 0)] = route
@@ -116,7 +116,7 @@ func (x *Index) compile(routes []*Route) {
 	}
 }
 
-func (x *Index) genUintSlice(s string, total type_hash, c_hashes *[HTTP_SECTION_COUNT]type_hash) int {
+func (x *index) genUintSlice(s string, total type_hash, c_hashes *[HTTP_SECTION_COUNT]type_hash) int {
 	c := DELIMITER_BYTE
 	na := 0
 	length := len(s)
@@ -139,7 +139,7 @@ func (x *Index) genUintSlice(s string, total type_hash, c_hashes *[HTTP_SECTION_
 	return na
 }
 
-func (x *Index) genUint(s string, total type_hash) type_hash {
+func (x *index) genUint(s string, total type_hash) type_hash {
 	length := len(s)
 	for i := 0; i < length; i++ {
 		total = total<<5 + type_hash(s[i])
@@ -147,6 +147,6 @@ func (x *Index) genUint(s string, total type_hash) type_hash {
 	return total
 }
 
-func (x *Index) genSalt(s string) type_hash {
+func (x *index) genSalt(s string) type_hash {
 	return type_hash(s[0] + s[1])
 }
