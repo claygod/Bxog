@@ -84,13 +84,6 @@ func (x *index) compile(routes []*route) {
 				x.tree[x.genUint(DELIMITER_STRING, salt)] = c_node
 			}
 		}
-		// one
-		/*
-			if length == 1 {
-				c_node.route = route
-				continue
-			}
-		*/
 		for i := 0; i < length; i++ {
 			if i == length-1 {
 				c_node.route = route
