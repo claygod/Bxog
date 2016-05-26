@@ -5,47 +5,47 @@ Bxog is a simple and fast HTTP router for Go (HTTP request multiplexer).
 # Usage
 
 An example of using the multiplexer:
+```go
+package main
 
-	package main
+import (
+	"io"
+	"net/http"
+	"github.com/claygod/bxog"
+)
 
-	import (
-		"io"
-		"net/http"
-		"github.com/claygod/bxog"
-	)
+// Handlers
+func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+	io.WriteString(w, "Welcome to Bxog!")
+}
+func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+	params := r.Params(req, "/abc/:para")
+	io.WriteString(w, "Params:\n")
+	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
+}
+func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+	// Getting parameters from URL
+	params := r.Params(req, "country")
+	io.WriteString(w, "Country:\n")
+	io.WriteString(w, " 'name' -> "+params["name"]+"\n")
+	io.WriteString(w, " 'capital' -> "+params["city"]+"\n")
+	io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
+	// Creating a URL string
+	io.WriteString(w, "Creating a URL from route:\n")
+	io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
+}
 
-	// Handlers
-	func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
-		io.WriteString(w, "Welcome to Bxog!")
-	}
-	func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
-		params := r.Params(req, "/abc/:para")
-		io.WriteString(w, "Params:\n")
-		io.WriteString(w, " 'par' -> "+params["par"]+"\n")
-	}
-	func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
-		// Getting parameters from URL
-		params := r.Params(req, "country")
-		io.WriteString(w, "Country:\n")
-		io.WriteString(w, " 'name' -> "+params["name"]+"\n")
-		io.WriteString(w, " 'capital' -> "+params["city"]+"\n")
-		io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
-		// Creating a URL string
-		io.WriteString(w, "Creating a URL from route:\n")
-		io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
-	}
-
-	// Main
-	func main() {
-		m := bxog.New()
-		m.Add("/", IHandler)
-		m.Add("/abc/:par", THandler)
-		m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
-			Id("country"). // For ease indicate the short ID
-			Method("GET") // GET method do not need to write here, it is used by default (this is an example)
-		m.Start(":80")
-	}
-
+// Main
+func main() {
+	m := bxog.New()
+	m.Add("/", IHandler)
+	m.Add("/abc/:par", THandler)
+	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
+		Id("country"). // For ease indicate the short ID
+		Method("GET") // GET method do not need to write here, it is used by default (this is an example)
+	m.Start(":80")
+}
+```
 
 Click URLs:
 - http://localhost
