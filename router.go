@@ -5,7 +5,6 @@ package bxog
 // Router
 
 import (
-	//"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -13,18 +12,18 @@ import (
 
 // Bxog is a simple and fast HTTP router for Go (HTTP request multiplexer).
 type Router struct {
-	routes []*Route
-	index  *Index
+	routes []*route
+	index  *index
 	url    string
 }
 
-//  New - create a new multiplexer
+// New - create a new multiplexer
 func New() *Router {
 	return &Router{}
 }
 
-//  Add - add a rule specifying the handler (the default method - GET, ID - as a string to this rule)
-func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request, *Router)) *Route {
+// Add - add a rule specifying the handler (the default method - GET, ID - as a string to this rule)
+func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request, *Router)) *route {
 	if len(url) > HTTP_PATTERN_COUNT {
 		panic("URL is too long")
 		return nil
@@ -33,7 +32,7 @@ func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request
 	}
 }
 
-//  Start - start the server indicating the listening port
+// Start - start the server indicating the listening port
 func (r *Router) Start(port string) {
 	r.index = newIndex()
 	r.index.compile(r.routes)
@@ -49,7 +48,7 @@ func (r *Router) Start(port string) {
 	log.Fatal(s.ListenAndServe())
 }
 
-//  Params - extract parameters from URL
+// Params - extract parameters from URL
 func (r *Router) Params(req *http.Request, id string) map[string]string {
 	out := make(map[string]string)
 	if c_route := r.index.index[r.index.genUint(id, 0)]; c_route != nil {
@@ -63,7 +62,7 @@ func (r *Router) Params(req *http.Request, id string) map[string]string {
 	return out
 }
 
-//  Create - generate URL of the available options
+// Create - generate URL of the available options
 func (r *Router) Create(id string, param map[string]string) string {
 	out := ""
 	if route := r.index.index[r.index.genUint(id, 0)]; route != nil {
@@ -78,7 +77,7 @@ func (r *Router) Create(id string, param map[string]string) string {
 	return out
 }
 
-//  Test - Start analogue (for testing only)
+// Test - Start analogue (for testing only)
 func (r *Router) Test() {
 	r.index = newIndex()
 	r.index.compile(r.routes)
