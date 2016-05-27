@@ -29,11 +29,10 @@ func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Re
 	return route
 }
 
-func (r *route) setSections(url string) *route {
+func (r *route) setSections(url string) {
 	sec := r.parseUrl(url[1:])
 	if len(sec) < HTTP_SECTION_COUNT {
 		r.sections = sec
-		return r
 	} else {
 		panic("Too many parameters!")
 	}
