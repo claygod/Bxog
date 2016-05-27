@@ -36,7 +36,6 @@ func (r *route) setSections(url string) *route {
 		return r
 	} else {
 		panic("Too many parameters!")
-		return nil
 	}
 }
 
