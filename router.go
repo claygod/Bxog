@@ -26,7 +26,6 @@ func New() *Router {
 func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request, *Router)) *route {
 	if len(url) > HTTP_PATTERN_COUNT {
 		panic("URL is too long")
-		return nil
 	} else {
 		return r.newRoute(url, handler, HTTP_METHOD_DEFAULT)
 	}
