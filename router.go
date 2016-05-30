@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Bxog is a simple and fast HTTP router for Go (HTTP request multiplexer).
+// Router Bxog is a simple and fast HTTP router for Go (HTTP request multiplexer).
 type Router struct {
 	routes []*route
 	index  *index
@@ -50,11 +50,11 @@ func (r *Router) Start(port string) {
 // Params - extract parameters from URL
 func (r *Router) Params(req *http.Request, id string) map[string]string {
 	out := make(map[string]string)
-	if c_route := r.index.index[r.index.genUint(id, 0)]; c_route != nil {
-		query := c_route.genSplit(req.URL.Path[1:])
-		for u := len(c_route.sections) - 1; u >= 0; u-- {
-			if c_route.sections[u].type_sec == TYPE_ARG {
-				out[c_route.sections[u].id] = query[u]
+	if cRoute := r.index.index[r.index.genUint(id, 0)]; cRoute != nil {
+		query := cRoute.genSplit(req.URL.Path[1:])
+		for u := len(cRoute.sections) - 1; u >= 0; u-- {
+			if cRoute.sections[u].type_sec == TYPE_ARG {
+				out[cRoute.sections[u].id] = query[u]
 			}
 		}
 	}
