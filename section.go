@@ -6,10 +6,10 @@ package bxog
 
 // Each route includes a section
 type section struct {
-	id       string
-	type_sec int // 0 - TYPE_STAT, 1 - TYPE_ARG
+	id      string
+	typeSec int // 0 - TYPE_STAT, 1 - TYPE_ARG
 }
 
-func newSection(sec string, type_s int) *section {
-	return &section{id: sec, type_sec: type_s}
+func newSection(sec string, tps int) *section {
+	return &section{id: sec, typeSec: tps}
 }
