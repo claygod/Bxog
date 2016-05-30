@@ -73,13 +73,13 @@ func (x *index) compile(routes []*route) {
 			x.tree[SLASH_HASH] = cNode
 			continue
 		}
-		c_hash := x.genUint(route.sections[0].id, salt)
-		if x.tree[c_hash] != nil {
-			cNode = x.tree[c_hash]
+		cHash := x.genUint(route.sections[0].id, salt)
+		if x.tree[cHash] != nil {
+			cNode = x.tree[cHash]
 		} else {
 			switch route.sections[0].typeSec {
 			case TYPE_STAT:
-				x.tree[c_hash] = cNode
+				x.tree[cHash] = cNode
 			case TYPE_ARG:
 				x.tree[x.genUint(DELIMITER_STRING, salt)] = cNode
 			}
