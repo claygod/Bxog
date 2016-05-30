@@ -53,7 +53,7 @@ func (r *Router) Params(req *http.Request, id string) map[string]string {
 	if cRoute := r.index.index[r.index.genUint(id, 0)]; cRoute != nil {
 		query := cRoute.genSplit(req.URL.Path[1:])
 		for u := len(cRoute.sections) - 1; u >= 0; u-- {
-			if cRoute.sections[u].type_sec == TYPE_ARG {
+			if cRoute.sections[u].typeSec == TYPE_ARG {
 				out[cRoute.sections[u].id] = query[u]
 			}
 		}
@@ -66,9 +66,9 @@ func (r *Router) Create(id string, param map[string]string) string {
 	out := ""
 	if route := r.index.index[r.index.genUint(id, 0)]; route != nil {
 		for _, section := range route.sections {
-			if section.type_sec == TYPE_STAT {
+			if section.typeSec == TYPE_STAT {
 				out = out + DELIMITER_STRING + section.id
-			} else if par, ok := param[section.id]; section.type_sec == TYPE_ARG && ok {
+			} else if par, ok := param[section.id]; section.typeSec == TYPE_ARG && ok {
 				out = out + DELIMITER_STRING + par
 			}
 		}
