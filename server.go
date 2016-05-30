@@ -12,10 +12,8 @@ import (
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if route := r.index.find(req.URL.Path, req, r); route != nil {
 		route.handler(w, req, r)
-		return
 	} else {
 		r.Default(w, req)
-		return
 	}
 }
 
@@ -23,5 +21,4 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (r *Router) Default(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(404)
 	http.Error(w, "Page not found", 404)
-	return
 }
