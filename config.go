@@ -5,7 +5,7 @@ package bxog
 // Gonfig
 // Multiplexer configuration
 
-type type_hash uint32
+type typeHash uint32
 
 // Types sections URL
 const (
@@ -41,8 +41,8 @@ const (
 
 // Non-editable parameters
 const (
-	DELIMITER_STRING           = "/"
-	DELIMITER_BYTE   byte      = 47
-	DELIMITER_UINT   type_hash = 47
-	SLASH_HASH       type_hash = 1
+	DELIMITER_STRING          = "/"
+	DELIMITER_BYTE   byte     = 47
+	DELIMITER_UINT   typeHash = 47
+	SLASH_HASH       typeHash = 1
 )
