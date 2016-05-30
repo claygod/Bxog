@@ -36,11 +36,7 @@ func (x *index) find(url string, req *http.Request, r *Router) *route {
 	}
 	// slash
 	if level == 0 {
-		if cNode.route != nil {
-			return cNode.route
-		} else {
-			return nil
-		}
+		return cNode.route
 	}
 
 	for i := 0; i < level; i++ {
