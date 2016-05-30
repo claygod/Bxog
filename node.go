@@ -6,12 +6,12 @@ package bxog
 
 // Nodes are stored in the index. Used for route search.
 type node struct {
-	child map[type_hash]*node
+	child map[typeHash]*node
 	route *route
 }
 
 func newNode() *node {
 	nNode := &node{}
-	nNode.child = make(map[type_hash]*node)
+	nNode.child = make(map[typeHash]*node)
 	return nNode
 }
