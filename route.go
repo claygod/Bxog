@@ -49,7 +49,7 @@ func (r *route) Id(value string) *route {
 }
 
 func (r *route) parseUrl(url string) []*section {
-	var array_sec []*section
+	var arraySec []*section
 	if len(url) == 0 {
 		return []*section{}
 	}
@@ -57,12 +57,12 @@ func (r *route) parseUrl(url string) []*section {
 
 	for _, value := range result {
 		if strings.HasPrefix(value, ":") {
-			array_sec = append(array_sec, newSection(value[1:], TYPE_ARG))
+			arraySec = append(arraySec, newSection(value[1:], TYPE_ARG))
 		} else {
-			array_sec = append(array_sec, newSection(value, TYPE_STAT))
+			arraySec = append(arraySec, newSection(value, TYPE_STAT))
 		}
 	}
-	return array_sec
+	return arraySec
 }
 
 func (r *route) genSplit(s string) []string {
