@@ -11,7 +11,7 @@ type node struct {
 }
 
 func newNode() *node {
-	new_node := &node{}
-	new_node.child = make(map[type_hash]*node)
-	return new_node
+	nNode := &node{}
+	nNode.child = make(map[type_hash]*node)
+	return nNode
 }
