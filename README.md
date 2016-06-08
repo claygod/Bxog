@@ -32,7 +32,7 @@ func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 	io.WriteString(w, " 'capital' -> "+params["city"]+"\n")
 	io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
 	// Creating a URL string
-	io.WriteString(w, "Creating a URL from route:\n")
+	io.WriteString(w, "Creating a URL from route (This is an example of creating another URL):\n")
 	io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
 }
 
