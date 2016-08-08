@@ -20,7 +20,7 @@ func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 	io.WriteString(w, "Welcome to Bxog!")
 }
 func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
-	params := r.Params(req, "/abc/:para")
+	params := r.Params(req, "/abc/:par")
 	io.WriteString(w, "Params:\n")
 	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
 }
