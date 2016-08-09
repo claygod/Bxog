@@ -40,16 +40,20 @@ func (r *route) setSections(url string) {
 	}
 }
 
+// Method - note the method (het and post) for use
 func (r *route) Method(value string) *route {
 	r.method = value
 	return r
 }
 
+// Id - assigning Route ID, which will be convenient to work with the
+// creation of URL strings from the available options.
 func (r *route) Id(value string) *route {
 	r.id = value
 	return r
 }
 
+// Context - for the route, which will be available from within the handler.
 func (r *route) Context(key string, value string) *route {
 	r.context[key] = value
 	return r
