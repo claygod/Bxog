@@ -23,6 +23,7 @@ func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 	params := r.Params(req, "/abc/:par")
 	io.WriteString(w, "Params:\n")
 	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
+	io.WriteString(w, " 'name' -> "+params["name"]+"\n")
 }
 func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 	// Getting parameters from URL
@@ -40,7 +41,8 @@ func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 func main() {
 	m := bxog.New()
 	m.Add("/", IHandler)
-	m.Add("/abc/:par", THandler)
+	m.Add("/abc/:par", THandler).
+		Context("name", "John") // Context - only string (key and value)
 	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
 		Id("country"). // For ease indicate the short ID
 		Method("GET") // GET method do not need to write here, it is used by default (this is an example)
