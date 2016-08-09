@@ -51,6 +51,9 @@ func (r *Router) Start(port string) {
 func (r *Router) Params(req *http.Request, id string) map[string]string {
 	out := make(map[string]string)
 	if cRoute := r.index.index[r.index.genUint(id, 0)]; cRoute != nil {
+		for key, value := range cRoute.context {
+			out[key] = value
+		}
 		query := cRoute.genSplit(req.URL.Path[1:])
 		for u := len(cRoute.sections) - 1; u >= 0; u-- {
 			if cRoute.sections[u].typeSec == TYPE_ARG {
