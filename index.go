@@ -121,7 +121,7 @@ func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_CO
 			na++
 			continue
 		}
-		total = total<<5 + typeHash(s[i])
+		total += typeHash(s[i]) + typeHash(HASH_MULTIPLIER*i)
 	}
 	cHashes[na] = total
 	na++
@@ -131,7 +131,7 @@ func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_CO
 func (x *index) genUint(s string, total typeHash) typeHash {
 	length := len(s)
 	for i := 0; i < length; i++ {
-		total = total<<5 + typeHash(s[i])
+		total += typeHash(s[i]) + typeHash(HASH_MULTIPLIER*i)
 	}
 	return total
 }
