@@ -5,7 +5,7 @@ package bxog
 // route
 
 import (
-	"claygod/Context"
+	"github.com/claygod/Context"
 	"net/http"
 	"strings"
 )
