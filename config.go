@@ -31,10 +31,6 @@ const (
 
 	// The maximum wait time during a write operation
 	WRITE_TIME_OUT = 100
-	
-	// Modifier, you can change (increase) in order to reduce
-	// the probability of collisions in the sections URL
-	HASH_MULTIPLIER = 1024
 
 	// Address directory for files on the website URL
 	FILE_PREF = "/file/"
