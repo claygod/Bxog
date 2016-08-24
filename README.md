@@ -10,42 +10,49 @@ An example of using the multiplexer:
 package main
 
 import (
+	"github.com/claygod/Bxog"
+	"github.com/claygod/Context"
 	"io"
 	"net/http"
-	"github.com/claygod/bxog"
 )
 
 // Handlers
-func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+func IHandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
 	io.WriteString(w, "Welcome to Bxog!")
+	if x := c.Get("answer"); x != nil {
+		io.WriteString(w, "\n Context is used? "+x.(string)+"\n")
+	}
 }
-func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
-	params := r.Params(req, "/abc/:par")
+func THandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
 	io.WriteString(w, "Params:\n")
-	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
-	io.WriteString(w, " 'name' -> "+params["name"]+"\n")
+	if x := c.Get("par"); x != nil {
+		io.WriteString(w, " 'par' -> "+x.(string)+"\n")
+	}
+	if x := c.Get("name"); x != nil {
+		io.WriteString(w, " 'name' -> "+x.(string)+"\n")
+	}
 }
-func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+func PHandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
 	// Getting parameters from URL
-	params := r.Params(req, "country")
 	io.WriteString(w, "Country:\n")
-	io.WriteString(w, " 'name' -> "+params["name"]+"\n")
-	io.WriteString(w, " 'capital' -> "+params["city"]+"\n")
-	io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
-	// Creating a URL string
-	io.WriteString(w, "Creating a URL from route (This is an example of creating another URL):\n")
-	io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
+	io.WriteString(w, " 'name' -> "+c.Get("name").(string)+"\n")
+	io.WriteString(w, " 'capital' -> "+c.Get("city").(string)+"\n")
+	io.WriteString(w, " 'valuta' -> "+c.Get("money").(string)+"\n")
+
 }
 
 // Main
 func main() {
+	ctx := Context.New()
+	ctx.Set("answer", "Yes!")
+
 	m := bxog.New()
-	m.Add("/", IHandler)
-	m.Add("/abc/:par", THandler).
-		Context("name", "John") // Context - only string (key and value)
+	m.Add("/", IHandler).
+		Context(ctx.Fix()) // This context has access to the variable "answer"
+	m.Add("/abc/:par", THandler)
 	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
 		Id("country"). // For ease indicate the short ID
-		Method("GET") // GET method do not need to write here, it is used by default (this is an example)
+		Method("GET")  // GET method do not need to write here, it is used by default (this is an example)
 	m.Start(":80")
 }
 ```
@@ -61,7 +68,7 @@ Necessary changes in the configuration of the multiplexer can be made in the con
 
 # Perfomance
 
-Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  Detailed benchmark [here](https://github.com/claygod/bxogtest). In short (less time, the better):
+Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  In short (less time, the better):
 
 - Bxog         330 ns/op
 - HttpRouter   395 ns/op
@@ -76,8 +83,7 @@ Methods:
 -  *New* - create a new multiplexer
 -  *Add* - add a rule specifying the handler (the default method - GET, ID - as a string to this rule)
 -  *Start* - start the server indicating the listening port
--  *Params* - extract parameters from URL
--  *Create* - generate URL of the available options
+-  *Context* - for the route, which will be available from within the handler.
 -  *Test* - Start analogue (for testing only)
 
 Example:
