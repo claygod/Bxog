@@ -15,7 +15,7 @@ package bxog
 // 2016 Eduard Sesigin. Contacts: <claygod@yandex.ru>
 
 import (
-	"github.com/claygod/Context"
+	"claygod/Context"
 	"net/http"
 	"net/http/httptest"
 	"testing"

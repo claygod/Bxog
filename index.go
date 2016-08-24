@@ -21,7 +21,7 @@ func newIndex() *index {
 	}
 }
 
-func (x *index) find(url string, req *http.Request, r *Router) *route {
+func (x *index) find(url string, req *http.Request) *route {
 	salt := x.genSalt(req.Method)
 	cHashes := [HTTP_SECTION_COUNT]typeHash{}
 	level := x.genUintSlice(url[1:], salt, &cHashes)
@@ -121,7 +121,7 @@ func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_CO
 			na++
 			continue
 		}
-		total += typeHash(s[i]) + typeHash(HASH_MULTIPLIER*i)
+		total = total<<5 + typeHash(s[i])
 	}
 	cHashes[na] = total
 	na++
@@ -131,7 +131,7 @@ func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_CO
 func (x *index) genUint(s string, total typeHash) typeHash {
 	length := len(s)
 	for i := 0; i < length; i++ {
-		total += typeHash(s[i]) + typeHash(HASH_MULTIPLIER*i)
+		total = total<<5 + typeHash(s[i])
 	}
 	return total
 }

@@ -5,7 +5,7 @@ package bxog
 // Router
 
 import (
-	"github.com/claygod/Context"
+	"claygod/Context"
 	"log"
 	"net/http"
 	"time"
