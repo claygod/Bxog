@@ -10,8 +10,15 @@ import (
 
 // ServeHTTP looks for a matching route
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	if route := r.index.find(req.URL.Path, req, r); route != nil {
-		route.handler(w, req, r)
+	if route := r.index.find(req.URL.Path, req); route != nil {
+		ctx := route.ctx
+		query := route.genSplit(req.URL.Path[1:])
+		for u := len(route.sections) - 1; u >= 0; u-- {
+			if route.sections[u].typeSec == TYPE_ARG {
+				ctx.Set(route.sections[u].id, query[u])
+			}
+		}
+		route.handler(w, req, ctx)
 	} else {
 		r.Default(w, req)
 	}
