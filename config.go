@@ -5,7 +5,7 @@ package bxog
 // Gonfig
 // Multiplexer configuration
 
-type typeHash uint32
+type typeHash uint64
 
 // Types sections URL
 const (
