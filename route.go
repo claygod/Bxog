@@ -5,6 +5,7 @@ package bxog
 // route
 
 import (
+	"claygod/Context"
 	"net/http"
 	"strings"
 )
@@ -13,18 +14,18 @@ import (
 type route struct {
 	id       string // added by the user
 	method   string
-	handler  func(http.ResponseWriter, *http.Request, *Router)
+	handler  func(http.ResponseWriter, *http.Request, *Context.Context)
 	sections []*section
-	context  map[string]string
+	ctx      *Context.Context
 }
 
-func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Router), method string) *route {
+func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Context.Context), method string) *route {
 	route := &route{
 		url,
 		method,
 		handler,
 		[]*section{},
-		make(map[string]string),
+		Context.New(),
 	}
 	route.setSections(url)
 	r.routes = append(r.routes, route)
@@ -40,22 +41,19 @@ func (r *route) setSections(url string) {
 	}
 }
 
-// Method - note the method (het and post) for use
 func (r *route) Method(value string) *route {
 	r.method = value
 	return r
 }
 
-// Id - assigning Route ID, which will be convenient to work with the
-// creation of URL strings from the available options.
 func (r *route) Id(value string) *route {
 	r.id = value
 	return r
 }
 
 // Context - for the route, which will be available from within the handler.
-func (r *route) Context(key string, value string) *route {
-	r.context[key] = value
+func (r *route) Context(ctx *Context.Context) *route {
+	r.ctx = ctx
 	return r
 }
 
