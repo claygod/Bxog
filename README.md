@@ -11,7 +11,6 @@ package main
 
 import (
 	"claygod/Bxog"
-	//"claygod/Context"
 	"io"
 	"net/http"
 )
