@@ -10,45 +10,38 @@ An example of using the multiplexer:
 package main
 
 import (
-	"github.com/claygod/Bxog"
-	"github.com/claygod/Context"
+	"claygod/Bxog"
+	//"claygod/Context"
 	"io"
 	"net/http"
 )
 
 // Handlers
-func IHandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
+func IHandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "Welcome to Bxog!")
-	if x := c.Get("answer"); x != nil {
-		io.WriteString(w, "\n Context is used? "+x.(string)+"\n")
-	}
 }
-func THandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
+func THandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "Params:\n")
-	if x := c.Get("par"); x != nil {
-		io.WriteString(w, " 'par' -> "+x.(string)+"\n")
+	if x := req.Header.Get("par"); x != "" {
+		io.WriteString(w, " 'par' -> "+x+"\n")
 	}
-	if x := c.Get("name"); x != nil {
-		io.WriteString(w, " 'name' -> "+x.(string)+"\n")
+	if x := req.Header.Get("name"); x != "" {
+		io.WriteString(w, " 'name' -> "+x+"\n")
 	}
 }
-func PHandler(w http.ResponseWriter, req *http.Request, c *Context.Context) {
-	// Getting parameters from URL
+func PHandler(w http.ResponseWriter, req *http.Request) {
+	// Getting parameters
 	io.WriteString(w, "Country:\n")
-	io.WriteString(w, " 'name' -> "+c.Get("name").(string)+"\n")
-	io.WriteString(w, " 'capital' -> "+c.Get("city").(string)+"\n")
-	io.WriteString(w, " 'valuta' -> "+c.Get("money").(string)+"\n")
+	io.WriteString(w, " 'name' -> "+req.Header.Get("name")+"\n")
+	io.WriteString(w, " 'capital' -> "+req.Header.Get("city")+"\n")
+	io.WriteString(w, " 'valuta' -> "+req.Header.Get("money")+"\n")
 
 }
 
 // Main
 func main() {
-	ctx := Context.New()
-	ctx.Set("answer", "Yes!")
-
 	m := bxog.New()
-	m.Add("/", IHandler).
-		Context(ctx.Fix()) // This context has access to the variable "answer"
+	m.Add("/", IHandler)
 	m.Add("/abc/:par", THandler)
 	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
 		Id("country"). // For ease indicate the short ID
@@ -68,7 +61,7 @@ Necessary changes in the configuration of the multiplexer can be made in the con
 
 # Perfomance
 
-Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  In short (less time, the better):
+Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  Detailed benchmark [here](https://github.com/claygod/bxogtest). In short (less time, the better):
 
 - Bxog         330 ns/op
 - HttpRouter   395 ns/op
@@ -83,7 +76,6 @@ Methods:
 -  *New* - create a new multiplexer
 -  *Add* - add a rule specifying the handler (the default method - GET, ID - as a string to this rule)
 -  *Start* - start the server indicating the listening port
--  *Context* - for the route, which will be available from within the handler.
 -  *Test* - Start analogue (for testing only)
 
 Example:
@@ -95,6 +87,7 @@ Example:
 # Named parameters
 
 Arguments in the rules designated route colon. Example route: */abc/:param* , where *abc* is a static section and *:param* - the dynamic section(argument).
+The parameters are transmitted via headers
 
 # Static files
 

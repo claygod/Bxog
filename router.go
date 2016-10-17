@@ -5,7 +5,6 @@ package bxog
 // Router
 
 import (
-	"github.com/claygod/Context"
 	"log"
 	"net/http"
 	"time"
@@ -24,7 +23,7 @@ func New() *Router {
 }
 
 // Add - add a rule specifying the handler (the default method - GET, ID - as a string to this rule)
-func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request, *Context.Context)) *route {
+func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request)) *route {
 	if len(url) > HTTP_PATTERN_COUNT {
 		panic("URL is too long")
 	} else {

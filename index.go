@@ -106,6 +106,7 @@ func (x *index) compile(routes []*route) {
 }
 
 func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_COUNT]typeHash) int {
+	// fmt.Print("\n -- salt: ", typeHash)
 	c := DELIMITER_BYTE
 	na := 0
 	length := len(s)
