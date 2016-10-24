@@ -104,19 +104,6 @@ func TestDefaultMethodGet(t *testing.T) {
 	}
 }
 
-func TestGetParam(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/abc/123", nil)
-	res := httptest.NewRecorder()
-	muxx := New()
-	muxx.Add("/abc/:par", func(w http.ResponseWriter, req *http.Request) {})
-
-	muxx.Test()
-	muxx.ServeHTTP(res, req)
-	if req.Header.Get("par") != "123" {
-		t.Error("Error get param")
-	}
-}
-
 // Test route "/"
 func TestRouteSlash(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
@@ -131,30 +118,6 @@ func TestRouteSlash(t *testing.T) {
 	}
 }
 
-func TestMultipleRoutingVariables(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/abc/p1/p2", nil)
-	res := httptest.NewRecorder()
-	muxx := New()
-	muxx.Add("/abc/:par1/:par2", func(rw http.ResponseWriter, req *http.Request) {}).Id("two")
-	muxx.Test()
-	muxx.ServeHTTP(res, req)
-	if req.Header.Get("par1") != "p1" || req.Header.Get("par2") != "p2" {
-		t.Error("Error multiple routing variables")
-	}
-}
-
-func TestRoutingVariable(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/123", nil)
-	res := httptest.NewRecorder()
-	muxx := New()
-	muxx.Add("/:abc", func(rw http.ResponseWriter, req *http.Request) {})
-	muxx.Test()
-	muxx.ServeHTTP(res, req)
-	if req.Header.Get("abc") != "123" {
-		t.Error("Error routing variable")
-	}
-}
-
 func TestSlashEnd(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/abc/", nil)
 	res := httptest.NewRecorder()
@@ -164,18 +127,5 @@ func TestSlashEnd(t *testing.T) {
 	muxx.ServeHTTP(res, req)
 	if res.Code == 777 {
 		t.Error("Slash removing doesn't work !")
-	}
-}
-
-func TestLongUrl(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/country/USA/capital/Washington/valuta/dollar", nil)
-	res := httptest.NewRecorder()
-	muxx := New()
-	muxx.Add("/country/:name/capital/:city/valuta/:money", func(rw http.ResponseWriter, req *http.Request) {
-	})
-	muxx.Test()
-	muxx.ServeHTTP(res, req)
-	if req.Header.Get("name") != "USA" {
-		t.Error("Error long url: ", req.Header.Get("name"))
 	}
 }
