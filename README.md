@@ -11,6 +11,7 @@ package main
 
 import (
 	"claygod/Bxog"
+	//"claygod/Context"
 	"io"
 	"net/http"
 )
@@ -21,19 +22,19 @@ func IHandler(w http.ResponseWriter, req *http.Request) {
 }
 func THandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "Params:\n")
-	if x := req.Header.Get("par"); x != "" {
+	if x := (req.Context().Value("par")).(string); x != "" {
 		io.WriteString(w, " 'par' -> "+x+"\n")
 	}
-	if x := req.Header.Get("name"); x != "" {
+	if x := (req.Context().Value("name")).(string); x != "" {
 		io.WriteString(w, " 'name' -> "+x+"\n")
 	}
 }
 func PHandler(w http.ResponseWriter, req *http.Request) {
 	// Getting parameters
 	io.WriteString(w, "Country:\n")
-	io.WriteString(w, " 'name' -> "+req.Header.Get("name")+"\n")
-	io.WriteString(w, " 'capital' -> "+req.Header.Get("city")+"\n")
-	io.WriteString(w, " 'valuta' -> "+req.Header.Get("money")+"\n")
+	io.WriteString(w, " 'name' -> "+(req.Context().Value("name")).(string)+"\n")
+	io.WriteString(w, " 'capital' -> "+(req.Context().Value("city")).(string)+"\n")
+	io.WriteString(w, " 'valuta' -> "+(req.Context().Value("money")).(string)+"\n")
 
 }
 
@@ -86,7 +87,7 @@ Example:
 # Named parameters
 
 Arguments in the rules designated route colon. Example route: */abc/:param* , where *abc* is a static section and *:param* - the dynamic section(argument).
-The parameters are transmitted via headers
+The parameters are transmitted via `context`
 
 # Static files
 
