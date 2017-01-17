@@ -10,8 +10,7 @@ An example of using the multiplexer:
 package main
 
 import (
-	"claygod/Bxog"
-	//"claygod/Context"
+	"github.com/claygod/Bxog"
 	"io"
 	"net/http"
 )
