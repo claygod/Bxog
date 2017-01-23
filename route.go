@@ -13,11 +13,11 @@ import (
 type route struct {
 	id       string // added by the user
 	method   string
-	handler  func(http.ResponseWriter, *http.Request)
+	handler  func(http.ResponseWriter, *http.Request, *Router)
 	sections []*section
 }
 
-func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request), method string) *route {
+func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Router), method string) *route {
 	route := &route{
 		url,
 		method,

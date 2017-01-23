@@ -11,20 +11,24 @@ import (
 // Router using the index selects the route
 type index struct {
 	tree  map[typeHash]*node
-	index map[typeHash]*route
+	index map[typeHash]route
 }
 
 func newIndex() *index {
 	return &index{
 		tree:  make(map[typeHash]*node),
-		index: make(map[typeHash]*route),
+		index: make(map[typeHash]route),
 	}
 }
 
-func (x *index) find(url string, req *http.Request) *route {
+func (x *index) find(req *http.Request) *route {
+	//log.Print(req.URL)
+	//log.Print(req.URL.Path)
 	salt := x.genSalt(req.Method)
 	cHashes := [HTTP_SECTION_COUNT]typeHash{}
-	level := x.genUintSlice(url[1:], salt, &cHashes)
+
+	//return nil
+	level := x.genUintSlice(req.URL.Path, salt, &cHashes) // req.URL.Path // 11111111111111
 	var cNode *node
 
 	if x.tree[cHashes[0]] != nil {
@@ -60,7 +64,7 @@ func (x *index) find(url string, req *http.Request) *route {
 func (x *index) compile(routes []*route) {
 	for _, route := range routes {
 		salt := x.genSalt(route.method)
-		x.index[x.genUint(route.id, 0)] = route
+		x.index[x.genUint(route.id, 0)] = *route
 		length := len(route.sections)
 		cNode := newNode()
 		// slash
@@ -106,16 +110,15 @@ func (x *index) compile(routes []*route) {
 }
 
 func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_COUNT]typeHash) int {
-	// fmt.Print("\n -- salt: ", typeHash)
 	c := DELIMITER_BYTE
 	na := 0
 	length := len(s)
-	if length == 0 {
+	if length == 1 {
 		cHashes[0] = SLASH_HASH
 		return 0
 	}
 
-	for i := 0; i < length; i++ {
+	for i := 1; i < length; i++ {
 		if s[i] == c {
 			cHashes[na] = total
 			total = 0
