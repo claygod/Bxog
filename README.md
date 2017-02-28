@@ -61,12 +61,13 @@ Necessary changes in the configuration of the multiplexer can be made in the con
 
 Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  Detailed benchmark [here](https://github.com/claygod/bxogtest). In short (less time, the better):
 
-- Bxog         330 ns/op
-- HttpRouter   345 ns/op
-- Zeus       23772 ns/op
-- GorillaMux 30223 ns/op
+- Bxog         277 ns/op
+- HttpRouter   307 ns/op
+- Zeus       18631 ns/op
+- GorillaMux 25302 ns/op
 - GorillaPat  1253 ns/op
 - Bone       63656 ns/op
+
 
 # API
 

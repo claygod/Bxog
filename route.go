@@ -15,6 +15,7 @@ type route struct {
 	method   string
 	handler  func(http.ResponseWriter, *http.Request, *Router)
 	sections []*section
+	url      string
 }
 
 func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Request, *Router), method string) *route {
@@ -23,6 +24,7 @@ func (r *Router) newRoute(url string, handler func(http.ResponseWriter, *http.Re
 		method,
 		handler,
 		[]*section{},
+		url,
 	}
 	route.setSections(url)
 	r.routes = append(r.routes, route)

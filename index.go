@@ -6,110 +6,102 @@ package bxog
 
 import (
 	"net/http"
+	"strings"
 )
 
 // Router using the index selects the route
 type index struct {
-	tree  map[typeHash]*node
+	tree  *node
 	index map[typeHash]route
 }
 
 func newIndex() *index {
 	return &index{
-		tree:  make(map[typeHash]*node),
 		index: make(map[typeHash]route),
 	}
 }
 
 func (x *index) find(req *http.Request) *route {
-	//log.Print(req.URL)
-	//log.Print(req.URL.Path)
 	salt := x.genSalt(req.Method)
 	cHashes := [HTTP_SECTION_COUNT]typeHash{}
+	level := x.genUintSlice(req.URL.Path, salt, &cHashes)
+	return x.findX(level, 0, x.tree, &cHashes)
+}
 
-	//return nil
-	level := x.genUintSlice(req.URL.Path, salt, &cHashes) // req.URL.Path // 11111111111111
-	var cNode *node
-
-	if x.tree[cHashes[0]] != nil {
-		cNode = x.tree[cHashes[0]]
-	} else if x.tree[x.genUint(DELIMITER_STRING, salt)] != nil {
-		cNode = x.tree[x.genUint(DELIMITER_STRING, salt)]
-	} else {
-		return nil
-	}
-	// slash
-	if level == 0 {
-		return cNode.route
-	}
-
-	for i := 0; i < level; i++ {
-		if cNode.route == nil {
-			if cNode.child[cHashes[i]] != nil {
-				cNode = cNode.child[cHashes[i]]
-			} else if cNode.child[DELIMITER_UINT] != nil {
-				cNode = cNode.child[DELIMITER_UINT]
-			} else {
-				return nil
-			}
-		} else if i == level-1 {
-			return cNode.route
-		} else {
-			return nil
-		}
+func (x *index) findX(ln int, level int, tree2 *node, cHashes *[HTTP_SECTION_COUNT]typeHash) *route {
+	if ln == level {
+		return tree2.route
+	} else if z1, ok := tree2.child[cHashes[level]]; ok {
+		return x.findX(ln, level+1, z1, cHashes)
+	} else if z2, ok := tree2.child[DELIMITER_UINT]; ok {
+		return x.findX(ln, level+1, z2, cHashes)
 	}
 	return nil
 }
 
-func (x *index) compile(routes []*route) {
-	for _, route := range routes {
-		salt := x.genSalt(route.method)
-		x.index[x.genUint(route.id, 0)] = *route
-		length := len(route.sections)
-		cNode := newNode()
-		// slash
-		if length == 0 {
-			cNode.route = route
-			x.tree[SLASH_HASH] = cNode
-			continue
+func (x *index) getNode(arr map[string]*route) *node {
+	out := newNode()
+	childs := make(map[typeHash]map[string]*route)
+	for url, r := range arr {
+		url = strings.Trim(url, DELIMITER_STRING)
+		if url == "" {
+			out.route = r
+			out.flag = true
+			return out
 		}
-		cHash := x.genUint(route.sections[0].id, salt)
-		if x.tree[cHash] != nil {
-			cNode = x.tree[cHash]
-		} else {
-			switch route.sections[0].typeSec {
-			case TYPE_STAT:
-				x.tree[cHash] = cNode
-			case TYPE_ARG:
-				x.tree[x.genUint(DELIMITER_STRING, salt)] = cNode
+		arrStr := strings.Split(url, DELIMITER_STRING)
+		if len(arrStr) > 1 {
+			key := arrStr[0]
+			salt := x.genSalt(r.method)
+			hash := x.genUint(key, salt)
+			if key[:1] == ":" {
+				hash = DELIMITER_UINT
 			}
-		}
-		for i := 0; i < length; i++ {
-			if i == length-1 {
-				cNode.route = route
-			} else {
-				nNode := newNode()
-				switch route.sections[i].typeSec {
-				case TYPE_STAT:
-					if i == 0 {
-						cNode.child[x.genUint(route.sections[i].id, salt)] = nNode
-					} else {
-						cNode.child[x.genUint(route.sections[i].id, 0)] = nNode
-					}
-				case TYPE_ARG:
-					if i == 0 {
-						cNode.child[x.genUint(DELIMITER_STRING, salt)] = nNode
-					} else {
-						cNode.child[DELIMITER_UINT] = nNode
-					}
-				}
-				cNode = nNode
+			if _, ok := childs[hash]; !ok {
+				childs[hash] = make(map[string]*route)
 			}
+			arrStr = arrStr[1:]
+			url = strings.Join(arrStr, DELIMITER_STRING)
+			childs[hash][url] = r
+		} else if len(arrStr) == 1 {
+			key := arrStr[0]
+
+			salt := x.genSalt(r.method)
+			hash := x.genUint(key, salt)
+			if key[:1] == ":" {
+				hash = DELIMITER_UINT
+			}
+			if _, ok := childs[hash]; !ok {
+				childs[hash] = make(map[string]*route)
+			}
+			arrStr = make([]string, 0)
+			url = ""
+			childs[hash][url] = r
 		}
 	}
+	for hash, v := range childs {
+		n := x.getNode(v)
+		out.child[hash] = n
+	}
+	return out
 }
 
-func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_COUNT]typeHash) int {
+func (x *index) compile(routes []*route) {
+	mapRoutes := make(map[string]*route)
+	var core *route
+	for _, r := range routes {
+		x.index[x.genUint(r.id, 0)] = *r
+		if r.url == "/" {
+			core = r
+		} else {
+			mapRoutes[r.url] = r
+		}
+	}
+	x.tree = x.getNode(mapRoutes)
+	x.tree.route = core
+}
+
+func (x *index) genUintSlice(s string, salt typeHash, cHashes *[HTTP_SECTION_COUNT]typeHash) int {
 	c := DELIMITER_BYTE
 	na := 0
 	length := len(s)
@@ -117,11 +109,11 @@ func (x *index) genUintSlice(s string, total typeHash, cHashes *[HTTP_SECTION_CO
 		cHashes[0] = SLASH_HASH
 		return 0
 	}
-
+	var total typeHash = salt
 	for i := 1; i < length; i++ {
 		if s[i] == c {
 			cHashes[na] = total
-			total = 0
+			total = salt
 			na++
 			continue
 		}

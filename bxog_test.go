@@ -20,6 +20,19 @@ import (
 	"testing"
 )
 
+func TestRoutingCore(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/", nil)
+	res := httptest.NewRecorder()
+	muxx := New()
+	muxx.Add("/", func(rw http.ResponseWriter, req *http.Request, r *Router) { req.Method = "CORE!" }).Method("GET")
+	muxx.Test()
+	muxx.ServeHTTP(res, req)
+
+	if req.Method != "CORE!" {
+		t.Error("Error in first url ('/')")
+	}
+}
+
 func TestRouting(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/b/12345", nil)
 	res := httptest.NewRecorder()
@@ -202,3 +215,22 @@ func TestSlashEnd(t *testing.T) {
 		t.Error("Slash removing doesn't work !")
 	}
 }
+
+func TestMoreRoutes(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/a/123", nil)
+	res := httptest.NewRecorder()
+	muxx := New()
+	muxx.Add("/a/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
+	muxx.Add("/b/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(701) })
+	muxx.Add("/abc/def/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(702) })
+	muxx.Test()
+	muxx.ServeHTTP(res, req)
+
+	if res.Code != 700 {
+		t.Error("MORE ROUTES!! ", res.Code)
+	}
+}
+
+/*
+
+ */

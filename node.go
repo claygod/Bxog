@@ -8,6 +8,7 @@ package bxog
 type node struct {
 	child map[typeHash]*node
 	route *route
+	flag  bool
 }
 
 func newNode() *node {

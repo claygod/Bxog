@@ -24,7 +24,7 @@ const (
 	HTTP_SECTION_COUNT = 32
 
 	// The maximum length of URL (characters)
-	HTTP_PATTERN_COUNT = 512
+	HTTP_PATTERN_COUNT = 256
 
 	// The maximum wait time during a read operation
 	READ_TIME_OUT = 100
