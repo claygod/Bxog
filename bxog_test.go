@@ -217,20 +217,32 @@ func TestSlashEnd(t *testing.T) {
 }
 
 func TestMoreRoutes(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/a/123", nil)
+	req, _ := http.NewRequest("GET", "/b/123", nil)
 	res := httptest.NewRecorder()
 	muxx := New()
-	muxx.Add("/a/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
-	muxx.Add("/b/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(701) })
+	muxx.Add("/a/:par/d", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
+	muxx.Add("/b/:par/d", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(701) })
 	muxx.Add("/abc/def/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(702) })
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
 
-	if res.Code != 700 {
+	if res.Code != 701 {
 		t.Error("MORE ROUTES!! ", res.Code)
 	}
 }
 
-/*
+func TestFool(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/a/xx/123", nil)
+	res := httptest.NewRecorder()
+	muxx := New()
+	muxx.Add("/country/:par/money/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(699) })
+	muxx.Add("/a/xx/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
+	muxx.Add("/a/yy/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(701) })
+	muxx.Add("/rtyrtyabc/def/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(702) })
+	muxx.Test()
+	muxx.ServeHTTP(res, req)
 
- */
+	if res.Code != 700 {
+		t.Error("Enough is wrong, fool!", res.Code)
+	}
+}

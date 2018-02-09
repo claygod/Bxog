@@ -15,6 +15,9 @@ const (
 
 // Editable parameters
 const (
+	// The maximum number of routes
+	MAX_ROUTES = 256
+
 	// The method used by default when you add a Route.
 	// Example: GET, POST etc.
 	HTTP_METHOD_DEFAULT = "GET"
@@ -41,8 +44,9 @@ const (
 
 // Non-editable parameters
 const (
-	DELIMITER_STRING          = "/"
-	DELIMITER_BYTE   byte     = 47
-	DELIMITER_UINT   typeHash = 47
-	SLASH_HASH       typeHash = 1
+	DELIMITER_STRING           = "/"
+	DELIMITER_BYTE    byte     = 47
+	DELIMITER_UINT    typeHash = 47
+	SLASH_HASH        typeHash = 1
+	DELIMITER_IN_LIST          = MAX_ROUTES * (HTTP_SECTION_COUNT * 3)
 )
