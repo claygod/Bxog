@@ -60,7 +60,6 @@ func (x *index) getNode(arr map[string]*route) *node {
 			if _, ok := childs[hash]; !ok {
 				childs[hash] = make(map[string]*route)
 			}
-			// arrStr = make([]string, 0)
 			url = ""
 			childs[hash][url] = r
 		}
@@ -89,7 +88,6 @@ func (x *index) compile(routes []*route) {
 	x.tree = x.getNode(mapRoutes)
 	x.tree.route = core
 	x.fillNode(x.tree, 0)
-	//x.fillList()
 }
 
 func (x *index) fillNode(n *node, shiftLeft int) int {
@@ -180,9 +178,6 @@ func (x *index) genUintSlice(s string, salt typeHash, cHashes *[HTTP_SECTION_COU
 	var total typeHash = salt
 	for i := 1; i < length; i++ {
 		if s[i] == c {
-			//if i == length-1 {
-			//	continue // last slash
-			//}
 			cHashes[na] = total
 			total = salt
 			na++
