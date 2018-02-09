@@ -60,7 +60,7 @@ func (x *index) getNode(arr map[string]*route) *node {
 			if _, ok := childs[hash]; !ok {
 				childs[hash] = make(map[string]*route)
 			}
-			arrStr = make([]string, 0)
+			// arrStr = make([]string, 0)
 			url = ""
 			childs[hash][url] = r
 		}
@@ -111,21 +111,18 @@ func (x *index) fillNode(n *node, shiftLeft int) int {
 			shiftCur++
 			x.listShifts[shiftCur] = shiftRigth
 			shiftRigth = x.fillNode(n.child[DELIMITER_UINT], shiftRigth)
-
 			shiftCur++
-			return shiftRigth
-
 		} else {
 			for k, n2 := range n.child {
 				x.listShifts[shiftCur] = int(k)
 				shiftCur++
 				x.listShifts[shiftCur] = shiftRigth
 				shiftRigth = x.fillNode(n2, shiftRigth)
-
 				shiftCur++
 			}
-			return shiftRigth
+
 		}
+		return shiftRigth
 	}
 
 	return 0
