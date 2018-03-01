@@ -52,9 +52,9 @@ func main() {
 ```
 
 Click URLs:
-- http://localhost
-- http://localhost/abc/123
-- http://localhost/country/USA/capital/Washington/valuta/dollar
+- http://localhost:9999
+- http://localhost:9999/abc/123
+- http://localhost:9999/country/USA/capital/Washington/valuta/dollar
 
 # Settings
 
