@@ -12,9 +12,10 @@ package bxog
 //   ▌▀▀▀▌▐█░░▌░░░░░░▌
 //   ▌░░░▌░█▄ ▌░░░░░░▌
 //
-// 2016 Eduard Sesigin. Contacts: <claygod@yandex.ru>
+// Copyright © 2016-2018 Eduard Sesigin. Contacts: <claygod@yandex.ru>
 
 import (
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -217,7 +218,7 @@ func TestSlashEnd(t *testing.T) {
 }
 
 func TestMoreRoutes(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/b/123", nil)
+	req, _ := http.NewRequest("GET", "/b/123/d", nil)
 	res := httptest.NewRecorder()
 	muxx := New()
 	muxx.Add("/a/:par/d", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
@@ -245,4 +246,13 @@ func TestFool(t *testing.T) {
 	if res.Code != 700 {
 		t.Error("Enough is wrong, fool!", res.Code)
 	}
+}
+
+func IHandler(w http.ResponseWriter, req *http.Request, r *Router) {
+	io.WriteString(w, "Welcome to Bxog!")
+}
+func THandler(w http.ResponseWriter, req *http.Request, r *Router) {
+	params := r.Params(req, "/abc/:par")
+	io.WriteString(w, "Params:\n")
+	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
 }

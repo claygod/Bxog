@@ -1,4 +1,4 @@
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2016-2018 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 package bxog
 
@@ -16,13 +16,17 @@ type index struct {
 	index      map[typeHash]route
 	listShifts [DELIMITER_IN_LIST]int
 	listRoutes []*route
+	coreRoute  *route
+	findMethod func(*http.Request) *route
 }
 
 func newIndex() *index {
-	return &index{
+	x := &index{
 		index:      make(map[typeHash]route),
 		listRoutes: []*route{&route{}}, // first route - dummy
 	}
+	x.findMethod = x.findTree
+	return x
 }
 
 func (x *index) getNode(arr map[string]*route) *node {
@@ -71,6 +75,10 @@ func (x *index) getNode(arr map[string]*route) *node {
 	return out
 }
 
+/*
+When compiling the required data for two methods of routing search
+(the second is left as an alternative)
+*/
 func (x *index) compile(routes []*route) {
 	if len(routes) > MAX_ROUTES {
 		panic("Too many routs, change the constant MAX_ROUTES in the configuration file.")
@@ -87,7 +95,12 @@ func (x *index) compile(routes []*route) {
 	}
 	x.tree = x.getNode(mapRoutes)
 	x.tree.route = core
+	x.fillCore()
 	x.fillNode(x.tree, 0)
+}
+
+func (x *index) fillCore() {
+	x.coreRoute, x.tree.route = x.tree.route, x.coreRoute
 }
 
 func (x *index) fillNode(n *node, shiftLeft int) int {
@@ -118,23 +131,22 @@ func (x *index) fillNode(n *node, shiftLeft int) int {
 				shiftRigth = x.fillNode(n2, shiftRigth)
 				shiftCur++
 			}
-
 		}
 		return shiftRigth
 	}
-
 	return 0
 }
 
-func (x *index) find(req *http.Request) *route {
-	salt := x.genSalt(req.Method)
+func (x *index) findShift(req *http.Request) *route {
 	cHashes := [HTTP_SECTION_COUNT]typeHash{}
-
-	level := x.genUintSlice(req.URL.Path, salt, &cHashes)
-	if level > 1 && cHashes[level-1] == 140 {
+	level := x.genUintSlice(req.URL.Path, x.genSalt(req.Method), &cHashes)
+	if level == 0 && cHashes[0] == SLASH_HASH { //
+		return x.coreRoute
+	} else if level > 1 && cHashes[level-1] == SLASH_HASH { // 140
 		return nil
 	}
 	curShift := 0
+
 	for curLevel := 0; curLevel <= level; curLevel++ {
 		shft := x.find2X(curLevel, curShift+1, cHashes[curLevel])
 		switch {
@@ -165,6 +177,26 @@ func (x *index) find2X(curLevel int, curShift int, curHash typeHash) int {
 		}
 		curShift++
 	}
+}
+
+func (x *index) findTree(req *http.Request) *route {
+	cHashes := [HTTP_SECTION_COUNT]typeHash{}
+	level := x.genUintSlice(req.URL.Path, x.genSalt(req.Method), &cHashes)
+	if level == 0 && x.coreRoute != nil {
+		return x.coreRoute
+	}
+	return x.findX(level, 0, x.tree, &cHashes)
+}
+
+func (x *index) findX(ln int, level int, tree2 *node, cHashes *[HTTP_SECTION_COUNT]typeHash) *route {
+	if ln == level {
+		return tree2.route
+	} else if z1, ok := tree2.child[cHashes[level]]; ok {
+		return x.findX(ln, level+1, z1, cHashes)
+	} else if z2, ok := tree2.child[DELIMITER_UINT]; ok {
+		return x.findX(ln, level+1, z2, cHashes)
+	}
+	return nil
 }
 
 func (x *index) genUintSlice(s string, salt typeHash, cHashes *[HTTP_SECTION_COUNT]typeHash) int {

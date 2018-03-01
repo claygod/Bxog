@@ -12,19 +12,20 @@ package main
 import (
 	"io"
 	"net/http"
-	"github.com/claygod/bxog"
+
+	bx "github.com/claygod/Bxog"
 )
 
 // Handlers
-func IHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+func IHandler(w http.ResponseWriter, req *http.Request, r *bx.Router) {
 	io.WriteString(w, "Welcome to Bxog!")
 }
-func THandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+func THandler(w http.ResponseWriter, req *http.Request, r *bx.Router) {
 	params := r.Params(req, "/abc/:par")
 	io.WriteString(w, "Params:\n")
 	io.WriteString(w, " 'par' -> "+params["par"]+"\n")
 }
-func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
+func PHandler(w http.ResponseWriter, req *http.Request, r *bx.Router) {
 	// Getting parameters from URL
 	params := r.Params(req, "country")
 	io.WriteString(w, "Country:\n")
@@ -38,14 +39,16 @@ func PHandler(w http.ResponseWriter, req *http.Request, r *bxog.Router) {
 
 // Main
 func main() {
-	m := bxog.New()
+	m := bx.New()
 	m.Add("/", IHandler)
 	m.Add("/abc/:par", THandler)
 	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
 		Id("country"). // For ease indicate the short ID
-		Method("GET") // GET method do not need to write here, it is used by default (this is an example)
-	m.Start(":80")
+		Method("GET")  // GET method do not need to write here, it is used by default (this is an example)
+	m.Test()
+	m.Start(":9999")
 }
+
 ```
 
 Click URLs:
@@ -59,14 +62,16 @@ Necessary changes in the configuration of the multiplexer can be made in the con
 
 # Perfomance
 
-Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus.  The test is done on a computer with a i7-6700T processor and 8 GB RAM. Detailed benchmark [here](https://github.com/claygod/bxogtest). In short (less time, the better):
+Bxog is the fastest router, showing the speed of query processing. Its speed is comparable to the speed of the popular multiplexers: Bone, Httprouter, Gorilla, Zeus. The test is done on a computer with a i3-6320 3.7GHz processor and 8 GB RAM. In short (less time, the better):
 
-- Bxog-8		103 ns/op
-- HttpRouter-8 		201 ns/op
-- Zeus-8 		13420 ns/op
-- Gorilla-8 		17350 ns/op
-- GorillaPat-8 		693 ns/op
-- Bone-8 		49633 ns/op
+- Bxog 163 ns/op
+- HttpRouter 183 ns/op
+- Zeus 12302 ns/op
+- GorillaMux 14928 ns/op
+- GorillaPat 618 ns/op
+- Bone 47333 ns/op
+
+Detailed benchmark [here](https://github.com/claygod/BxogTest)
 
 # API
 

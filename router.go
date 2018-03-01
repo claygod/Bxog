@@ -1,4 +1,4 @@
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2016-2018 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 package bxog
 
@@ -35,6 +35,7 @@ func (r *Router) Add(url string, handler func(http.ResponseWriter, *http.Request
 func (r *Router) Start(port string) {
 	r.index = newIndex()
 	r.index.compile(r.routes)
+
 	s := &http.Server{
 		Addr:           port,
 		Handler:        nil,
