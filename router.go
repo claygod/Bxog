@@ -5,6 +5,7 @@ package bxog
 // Router
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -15,6 +16,7 @@ type Router struct {
 	routes []*route
 	index  *index
 	url    string
+	s      *http.Server
 }
 
 // New - create a new multiplexer
@@ -43,9 +45,18 @@ func (r *Router) Start(port string) {
 		WriteTimeout:   WRITE_TIME_OUT * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
+	r.s = s
 	http.Handle(DELIMITER_STRING, r)
 	http.Handle(FILE_PREF, http.StripPrefix(FILE_PREF, http.FileServer(http.Dir(FILE_PATH))))
 	log.Fatal(s.ListenAndServe())
+}
+
+// Stop - aggressive stop the server
+func (r *Router) Stop() error {
+	if r.s == nil {
+		return fmt.Errorf("The server is not running and therefore cannot be stopped.")
+	}
+	return r.s.Close()
 }
 
 // Params - extract parameters from URL
