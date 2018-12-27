@@ -51,6 +51,14 @@ func (r *Router) Start(port string) {
 	log.Fatal(s.ListenAndServe())
 }
 
+// Shutdown - graceful stop the server
+func (r *Router) Shutdown() error {
+	if r.s == nil {
+		return fmt.Errorf("The server is not running and therefore cannot be stopped.")
+	}
+	return r.s.Shutdown(nil)
+}
+
 // Stop - aggressive stop the server
 func (r *Router) Stop() error {
 	if r.s == nil {
