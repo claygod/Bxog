@@ -81,6 +81,8 @@ Methods:
 -  *Start* - start the server indicating the listening port
 -  *Params* - extract parameters from URL
 -  *Create* - generate URL of the available options
+-  *Shutdown* - graceful stop the server
+-  *Stop* - aggressive stop the server
 -  *Test* - Start analogue (for testing only)
 
 Example:
