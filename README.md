@@ -33,9 +33,9 @@ func PHandler(w http.ResponseWriter, req *http.Request, r *bx.Router) {
 	io.WriteString(w, " 'name' -> "+params["name"]+"\n")
 	io.WriteString(w, " 'capital' -> "+params["city"]+"\n")
 	io.WriteString(w, " 'valuta' -> "+params["money"]+"\n")
-	// Creating a URL string
-	io.WriteString(w, "Creating a URL from route (This is an example of creating another URL):\n")
-	io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "capital": "Moscow", "money": "rouble"}))
+	// Creating an URL string
+	io.WriteString(w, "Creating an URL from the current route (This is an example of creating an another URL):\n")
+	io.WriteString(w, r.Create("country", map[string]string{"name": "Russia", "city": "Moscow", "money": "rouble"}))
 }
 
 // Main
@@ -44,8 +44,8 @@ func main() {
 	m.Add("/", IHandler)
 	m.Add("/abc/:par", THandler)
 	m.Add("/country/:name/capital/:city/valuta/:money", PHandler).
-		Id("country"). // For ease indicate the short ID
-		Method("GET")  // GET method do not need to write here, it is used by default (this is an example)
+		Id("country"). // For a convinience you can indicate a short ID
+		Method("GET")  // It is not necessary to indicate the GET method here as the GET method is used by default but this way is used to set an allowed method
 	m.Test()
 	m.Start(":9999")
 }
