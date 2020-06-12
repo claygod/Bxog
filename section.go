@@ -3,8 +3,8 @@
 package bxog
 
 // Section
-
 // Each route includes a section
+
 type section struct {
 	id      string
 	typeSec int // 0 - TYPE_STAT, 1 - TYPE_ARG

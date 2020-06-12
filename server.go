@@ -5,13 +5,11 @@ package bxog
 // Server
 
 import (
-	//"fmt"
 	"net/http"
 )
 
 // ServeHTTP looks for a matching route
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-
 	if route := r.index.findTree(req); route != nil {
 		route.handler(w, req, r)
 	} else {

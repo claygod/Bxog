@@ -14,5 +14,6 @@ type node struct {
 func newNode() *node {
 	nNode := &node{}
 	nNode.child = make(map[typeHash]*node)
+
 	return nNode
 }

@@ -130,6 +130,7 @@ func TestGetParam(t *testing.T) {
 
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if req.Method != "123" {
 		t.Error("Error get param")
 	}
@@ -142,6 +143,7 @@ func TestCreateUrl(t *testing.T) {
 	muxx.Add("/abc/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) {}).Id("test")
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if muxx.Create("test", map[string]string{"par": "456"}) != "/abc/456" {
 		t.Error("Error creating URL")
 	}
@@ -155,6 +157,7 @@ func TestDefaultId(t *testing.T) {
 	muxx.Add("/abc/:par", func(rw http.ResponseWriter, req *http.Request, r *Router) {})
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if muxx.Create("/abc/:par", map[string]string{"par": "456"}) != "/abc/456" {
 		t.Error("Error default Id")
 	}
@@ -169,6 +172,7 @@ func TestRouteSlash(t *testing.T) {
 	muxx.Add("/abc", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(700) })
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if res.Code != 777 {
 		t.Error("Error route '/'")
 	}
@@ -184,6 +188,7 @@ func TestMultipleRoutingVariables(t *testing.T) {
 	}).Id("two")
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if req.Method != "p1p2" {
 		t.Error("Error multiple routing variables", req.Method)
 	}
@@ -200,6 +205,7 @@ func TestRoutingVariable(t *testing.T) {
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
 	//fmt.Println(req.Method)
+
 	if req.Method != "123" {
 		t.Error("Error routing variable")
 	}
@@ -212,6 +218,7 @@ func TestSlashEnd(t *testing.T) {
 	muxx.Add("/abc", func(rw http.ResponseWriter, req *http.Request, r *Router) { rw.WriteHeader(777) })
 	muxx.Test()
 	muxx.ServeHTTP(res, req)
+
 	if res.Code == 777 {
 		t.Error("Slash removing doesn't work !")
 	}
@@ -251,6 +258,7 @@ func TestFool(t *testing.T) {
 func IHandler(w http.ResponseWriter, req *http.Request, r *Router) {
 	io.WriteString(w, "Welcome to Bxog!")
 }
+
 func THandler(w http.ResponseWriter, req *http.Request, r *Router) {
 	params := r.Params(req, "/abc/:par")
 	io.WriteString(w, "Params:\n")

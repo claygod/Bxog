@@ -45,6 +45,7 @@ func (r *Router) Start(port string) {
 		WriteTimeout:   WRITE_TIME_OUT * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
+
 	r.s = s
 	http.Handle(DELIMITER_STRING, r)
 	http.Handle(FILE_PREF, http.StripPrefix(FILE_PREF, http.FileServer(http.Dir(FILE_PATH))))
@@ -56,6 +57,7 @@ func (r *Router) Shutdown() error {
 	if r.s == nil {
 		return fmt.Errorf("The server is not running and therefore cannot be stopped.")
 	}
+
 	return r.s.Shutdown(nil)
 }
 
@@ -64,12 +66,14 @@ func (r *Router) Stop() error {
 	if r.s == nil {
 		return fmt.Errorf("The server is not running and therefore cannot be stopped.")
 	}
+
 	return r.s.Close()
 }
 
 // Params - extract parameters from URL
 func (r *Router) Params(req *http.Request, id string) map[string]string {
 	out := make(map[string]string)
+
 	if cRoute, ok := r.index.index[r.index.genUint(id, 0)]; ok {
 		query := cRoute.genSplit(req.URL.Path[1:])
 		for u := len(cRoute.sections) - 1; u >= 0; u-- {
@@ -78,12 +82,14 @@ func (r *Router) Params(req *http.Request, id string) map[string]string {
 			}
 		}
 	}
+
 	return out
 }
 
 // Create - generate URL of the available options
 func (r *Router) Create(id string, param map[string]string) string {
 	out := ""
+
 	if route, ok := r.index.index[r.index.genUint(id, 0)]; ok {
 		for _, section := range route.sections {
 			if section.typeSec == TYPE_STAT {
@@ -93,6 +99,7 @@ func (r *Router) Create(id string, param map[string]string) string {
 			}
 		}
 	}
+
 	return out
 }
 
