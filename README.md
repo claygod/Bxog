@@ -99,3 +99,7 @@ Arguments in the rules designated route colon. Example route: */abc/:param* , wh
 # Static files
 
 The directory path to the file and its nickname as part of URL specified in the configuration file. This constants *FILE_PREF* and *FILE_PATH*
+
+# Copyright
+
+Copyright © 2016-2022 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
