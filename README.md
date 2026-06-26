@@ -102,4 +102,4 @@ The directory path to the file and its nickname as part of URL specified in the 
 
 # Copyright
 
-Copyright © 2016-2022 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+Copyright © 2016-2026 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
